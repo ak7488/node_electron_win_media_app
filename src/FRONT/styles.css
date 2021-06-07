@@ -1,0 +1,138 @@
+:root {
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    --colour_one: #e63946;
+    --colour_two: #f1faee;
+    --colour_three: #a8dadc;
+    --colour_four: #457b9d;
+    --colour_five: #1d3557;
+    --colour_six: #112035;
+    --colour_seven: #e63946;
+    --colour_eight: rgb(233, 233, 233);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--colour_six);
+}
+
+#root {
+    width: 100vw;
+    word-break: break-all;
+    padding: 20px;
+}
+
+#shortCuts {
+    display: none;
+    background-color: var(--colour_two);
+    width: 100vw;
+    height: 100vh;
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    overflow-y: scroll;
+    padding: 30px 10px;
+}
+
+table {
+    margin: auto;
+    margin-top: 20px;
+}
+
+table,
+th,
+td {
+    width: 90vw;
+    border: 1px solid var(--colour_six);
+    color: var(--colour_six);
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 10px;
+}
+
+.VideoElement {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.VideoElement::-webkit-scrollbar-button {
+    color: blue;
+}
+
+::-webkit-scrollbar {
+    background-color: var(--colour_three);
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+    background: var(--colour_five);
+    border-radius: 2px;
+}
+
+.VideoElement__no_video_yet__container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.VideoElement__videoItem__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.videoItem {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    min-height: 40px;
+    background-color: var(--colour_one);
+    cursor: pointer;
+}
+
+.videoItem__h3__name {
+    color: var(--colour_six);
+}
+
+.videoItem__p__path {
+    color: var(--colour_five);
+}
+
+form {
+    z-index: -200;
+    opacity: 0;
+}
+
+#input {
+    border: none;
+    padding: 10px;
+    width: 100px;
+    background-color: var(--colour_two);
+}
+
+.form_show {
+    z-index: 600;
+    opacity: 1;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.1);
+}
