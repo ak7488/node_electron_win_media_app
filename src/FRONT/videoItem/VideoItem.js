@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, remote } = require("electron");
 
 let item = {};
 let videos = [];
@@ -22,7 +22,8 @@ function setVideo(item) {
     document.title = item.name;
     index = videos.indexOf(item);
     video.play();
-    document.getElementById("name").innerText = item.name;
+    document.getElementById("WinTitle").innerText = item.name.slice(0, 40);
+    document.getElementById("Volume").innerText = `Volume: ${volume}`;
     document.getElementById(
         "playbackSpeed"
     ).innerText = `Playback Speed: ${videoPlayBackSpeed}`;
@@ -105,41 +106,69 @@ const fullScreen = () => {
     }
 };
 
-ipcRenderer.on("changeVideo", (_, d) => {
-    switch (d) {
-        case "nextVideo":
+//Windows three main controls
+const minimise = document.getElementById("minimise");
+const maximise = document.getElementById("maximise");
+const close = document.getElementById("close");
+
+const minimiseHandler = () => {
+    remote.getCurrentWindow().minimize();
+};
+const maximiseHandler = () => {
+    remote.getCurrentWindow().maximize();
+};
+const closeWindowHandler = () => {
+    remote.getCurrentWindow().close();
+};
+
+minimise.onclick = minimiseHandler;
+maximise.onclick = maximiseHandler;
+close.onclick = closeWindowHandler;
+
+document.onkeypress = (e) => {
+    switch (e.key) {
+        case "m":
+            minimiseHandler();
+            break;
+        case "a":
+            maximiseHandler();
+            break;
+        case "c":
+            closeWindowHandler();
+            break;
+        case "n":
             nextVideoHandler();
             break;
-        case "previousVideo":
+        case "p":
             previousVideoHandler();
             break;
-        case "volumeUp":
+        case "u":
             videoVolumeUp();
             break;
-        case "volumeDown":
+        case "d":
             videoVolumeDown();
             break;
-        case "stopOrStartVideo":
+        case "s":
             if (isPlaying) {
                 stopVideo();
             } else {
                 startVideo();
             }
             break;
-        case "Forward":
+        case "f":
             tenSecondsForward();
             break;
-        case "Backword":
+        case "b":
             tenSecondsBackword();
             break;
-        case "increaseVideoSpeed":
+        case "F":
             videoPlayBackSpeedHandler(videoPlayBackSpeed + 0.5);
             break;
-        case "decreaseVideoSpeed":
+        case "B":
             videoPlayBackSpeedHandler(videoPlayBackSpeed - 0.5);
             break;
-        case "FullScreen":
+        case "w":
             fullScreen();
             break;
     }
-});
+};

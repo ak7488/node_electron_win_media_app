@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Video Item</title>
+        <link rel="stylesheet" href="./VideoItem.css" />
+    </head>
+    <body>
+        <div id="WindowControls" class="WindowControls">
+            <div id="WinControlsMenu" class="WinControlsMenu">
+                <h3 id="WinTitle" class="WinTitle"></h3>
+            </div>
+            <div id="ThreeMainButtons" class="ThreeMainButtons">
+                <div id="minimise" class="minimise">
+                    <div id="minimise_sign" class="minimise_sign"></div>
+                </div>
+                <div id="maximise" class="maximise">
+                    <div id="maximise_sign" class="maximise_sign"></div>
+                </div>
+                <div id="close" class="close">
+                    <div id="close_sign_one" class="close_sign_one"></div>
+                    <div id="close_sign_two" class="close_sign_two"></div>
+                </div>
+            </div>
+        </div>
+        <video id="video" controls></video>
+        <div id="info">
+            <p id="Volume"></p>
+            <p id="playbackSpeed"></p>
+        </div>
+        <script src="./VideoItem.js"></script>
+    </body>
+</html>

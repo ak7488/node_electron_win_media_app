@@ -1,4 +1,4 @@
-const { ipcRenderer } = require("electron");
+const { ipcRenderer, remote } = require("electron");
 const React = require("react");
 const ReactDom = require("react-dom");
 
@@ -127,3 +127,36 @@ ipcRenderer.on("requestFileDir", async () => {
     });
     ipcRenderer.send("reloadVideoInSpecificDir", path.filePaths[0]);
 });
+
+//Windows three main controls
+const minimise = document.getElementById("minimise");
+const maximise = document.getElementById("maximise");
+const close = document.getElementById("close");
+
+const minimiseHandler = () => {
+    remote.getCurrentWindow().minimize();
+};
+const maximiseHandler = () => {
+    remote.getCurrentWindow().maximize();
+};
+const closeWindowHandler = () => {
+    remote.getCurrentWindow().close();
+};
+
+minimise.onclick = minimiseHandler;
+maximise.onclick = maximiseHandler;
+close.onclick = closeWindowHandler;
+
+document.onkeypress = (e) => {
+    switch (e.key) {
+        case "m":
+            minimiseHandler();
+            break;
+        case "a":
+            maximiseHandler();
+            break;
+        case "c":
+            closeWindowHandler();
+            break;
+    }
+};

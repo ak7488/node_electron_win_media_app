@@ -136,3 +136,88 @@ form {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.1);
 }
+
+/* WinControls */
+
+.WindowControls {
+    position: fixed;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(32, 23, 47);
+    width: 100vw;
+    height: 40px;
+}
+
+.ThreeMainButtons {
+    display: flex;
+}
+
+.minimise_sign {
+    width: 20px;
+    background-color: whitesmoke;
+    height: 3px;
+}
+
+.close {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.3s ease-in-out;
+}
+
+.close:hover {
+    background-color: red;
+}
+
+.maximise,
+.minimise {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease-in-out;
+}
+
+.minimise:hover,
+.maximise:hover {
+    background-color: black;
+}
+
+.maximise_sign {
+    width: 20px;
+    height: 20px;
+    border: 3px solid whitesmoke;
+}
+
+.close_sign_one {
+    transform: rotate(45deg);
+    width: 28px;
+    background-color: whitesmoke;
+    height: 3px;
+    position: absolute;
+    left: 7px;
+}
+.close_sign_two {
+    transform: rotate(-45deg);
+    width: 28px;
+    background-color: whitesmoke;
+    height: 3px;
+    position: absolute;
+    left: 7px;
+}
+
+.WinControlsMenu {
+    display: flex;
+    align-items: center;
+}
+
+.WinTitle {
+    padding: 0px 10px;
+    color: whitesmoke;
+}
