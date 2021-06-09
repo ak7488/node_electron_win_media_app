@@ -23,7 +23,9 @@ function setVideo(item) {
     index = videos.indexOf(item);
     video.play();
     document.getElementById("WinTitle").innerText = item.name.slice(0, 40);
-    document.getElementById("Volume").innerText = `Volume: ${volume}`;
+    document.getElementById("Volume").innerText = `Volume: ${Math.ceil(
+        volume * 10
+    )}`;
     document.getElementById(
         "playbackSpeed"
     ).innerText = `Playback Speed: ${videoPlayBackSpeed}`;
@@ -42,10 +44,16 @@ function nextVideoHandler() {
 function videoVolumeUp() {
     video.volume = volume + 0.1;
     volume = volume + 0.1;
+    document.getElementById("Volume").innerText = `Volume: ${Math.ceil(
+        volume * 10
+    )}`;
 }
 function videoVolumeDown() {
     video.volume = volume - 0.1;
     volume = volume - 0.1;
+    document.getElementById("Volume").innerText = `Volume: ${Math.ceil(
+        volume * 10
+    )}`;
 }
 
 function startVideo() {

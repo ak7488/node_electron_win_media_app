@@ -104,7 +104,7 @@ const audio = document.createElement("audio");
 function onAudioItemClickHandler(item) {
     const { name, path } = item;
     currentPath = path;
-    AudioName.innerText = name;
+    AudioName.innerText = name.slice(0, 65);
     audio.src = path;
     range.value = 0;
     Controls_container.appendChild(audio);
@@ -171,10 +171,10 @@ const nextAudioHandler = () => {
 };
 const previousAudioHandler = () => {
     const currentIndex = URLS.findIndex((e) => e.path === currentPath);
-    if (currentIndex + 1 >= URLS.length) {
-        onAudioItemClickHandler(URLS[0]);
+    if (currentIndex === 0) {
+        onAudioItemClickHandler(URLS.reverse()[0]);
     } else {
-        onAudioItemClickHandler(URLS[currentIndex + 1]);
+        onAudioItemClickHandler(URLS[currentIndex - 1]);
     }
 };
 
