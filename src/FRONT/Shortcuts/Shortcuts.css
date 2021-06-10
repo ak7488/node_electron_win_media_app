@@ -1,0 +1,152 @@
+:root {
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+        "Helvetica Neue", sans-serif;
+    --colour_one: #e63946;
+    --colour_two: #f1faee;
+    --colour_three: #a8dadc;
+    --colour_four: #457b9d;
+    --colour_five: #1d3557;
+    --colour_six: #112035;
+    --colour_seven: #e63946;
+    --colour_eight: rgb(233, 233, 233);
+}
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: var(--font-family);
+}
+
+body {
+    background-color: var(--colour_six);
+    color: var(--colour_two);
+}
+
+.VideoElement::-webkit-scrollbar-button {
+    color: blue;
+}
+
+::-webkit-scrollbar {
+    background-color: var(--colour_three);
+    width: 5px;
+}
+
+::-webkit-scrollbar-thumb:window-inactive,
+::-webkit-scrollbar-thumb {
+    background: var(--colour_five);
+    border-radius: 2px;
+}
+
+.table,
+.table td,
+.table th {
+    border: 2px solid var(--colour_two);
+    border-collapse: collapse;
+}
+
+.table {
+    width: 90vw;
+    margin-top: 10px;
+}
+
+.table td,
+.table th {
+    padding: 10px;
+    font-size: 16px;
+    width: 50%;
+}
+
+.table_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+/* WinControls */
+
+.WindowControls {
+    position: fixed;
+    top: 0px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: rgb(32, 23, 47);
+    width: 100vw;
+    height: 40px;
+}
+
+.ThreeMainButtons {
+    display: flex;
+}
+
+.minimise_sign {
+    width: 20px;
+    background-color: whitesmoke;
+    height: 3px;
+}
+
+.close {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.3s ease-in-out;
+}
+
+.close:hover {
+    background-color: red;
+}
+
+.maximise,
+.minimise {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s ease-in-out;
+}
+
+.minimise:hover,
+.maximise:hover {
+    background-color: black;
+}
+
+.maximise_sign {
+    width: 20px;
+    height: 20px;
+    border: 3px solid whitesmoke;
+}
+
+.close_sign_one {
+    transform: rotate(45deg);
+    width: 28px;
+    background-color: whitesmoke;
+    height: 3px;
+    position: absolute;
+    left: 7px;
+}
+.close_sign_two {
+    transform: rotate(-45deg);
+    width: 28px;
+    background-color: whitesmoke;
+    height: 3px;
+    position: absolute;
+    left: 7px;
+}
+
+.WinControlsMenu {
+    display: flex;
+    align-items: center;
+}
+
+.WinTitle {
+    padding: 0px 10px;
+    color: whitesmoke;
+}

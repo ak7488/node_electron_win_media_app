@@ -2,10 +2,10 @@ const { BrowserWindow } = require("electron");
 
 //create window function
 // filepath = html to load in the created window
-const createWindow = async (filePath) => {
+const createWindow = async (filePath, height = 720, width = 720) => {
     const win = new BrowserWindow({
-        width: 1200,
-        heigh: 720,
+        width,
+        height,
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: false,
@@ -13,7 +13,7 @@ const createWindow = async (filePath) => {
             enableRemoteModule: true,
         },
         frame: false,
-        icon: __dirname + "./src/assets/1video.ico",
+        icon: __dirname + "../assets/1video.ico",
     });
 
     win.loadFile(filePath);

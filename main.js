@@ -12,7 +12,9 @@ let videoItemWindow;
 let videoHomeWindow;
 let AudioHomeWindow;
 let SecretFolderWindow;
-let dirURL = "";
+let AudioItemWindow;
+let videoDirURL = "";
+let audioDirURL = "";
 const { app, globalShortcut, ipcMain, Menu } = electron;
 const menu = new Menu();
 
@@ -25,35 +27,55 @@ const main = async () => {
         app.quit();
     });
     globalShortcut.register("f6", () => {
-        win.webContents.toggleDevTools();
-        if (videoItemWindow) {
+        if (win.isFocused()) {
+            win.webContents.toggleDevTools();
+        }
+        if (videoItemWindow && videoItemWindow.isFocused()) {
             videoItemWindow.webContents.toggleDevTools();
         }
-        if (videoHomeWindow) {
+        if (videoHomeWindow && videoHomeWindow.isFocused()) {
             videoHomeWindow.webContents.toggleDevTools();
         }
-        if (AudioHomeWindow) {
+        if (AudioHomeWindow && AudioHomeWindow.isFocused()) {
             AudioHomeWindow.webContents.toggleDevTools();
         }
-        if (SecretFolderWindow) {
+        if (SecretFolderWindow && SecretFolderWindow.isFocused()) {
             SecretFolderWindow.webContents.toggleDevTools();
         }
+        if (AudioItemWindow && AudioItemWindow.isFocused()) {
+            AudioItemWindow.webContents.toggleDevTools();
+        }
+    });
+
+    globalShortcut.register("f1", async () => {
+        if (
+            win.isFocused() ||
+            (videoItemWindow && videoItemWindow.isFocused()) ||
+            (videoHomeWindow && videoHomeWindow.isFocused()) ||
+            (AudioHomeWindow && AudioHomeWindow.isFocused()) ||
+            (AudioItemWindow && AudioItemWindow.isFocused()) ||
+            (SecretFolderWindow && SecretFolderWindow.isFocused())
+        ) {
+            return await createWindow("./src/FRONT/Shortcuts/Shortcuts.html");
+        }
+    });
+
+    globalShortcut.register("f7", () => {
+        app.quit();
     });
 
     ipcMain.on("openSecretFolderWindow", async () => {
-        SecretFolderWindow = await app.whenReady().then(async () => {
-            return await createWindow(
-                "./src/FRONT/SecretFolder/SecretFolder.html"
-            );
-        });
+        SecretFolderWindow = await createWindow(
+            "./src/FRONT/SecretFolder/SecretFolder.html"
+        );
     });
 
     ipcMain.on("openVideoWindow", async () => {
-        dirURL = `${homeDir}/Videos`;
-        videoHomeWindow = await app.whenReady().then(async () => {
-            return await createWindow("./src/FRONT/videoHome/videoHome.html");
-        });
-        const videoNames = await getAllFileInSpecificDir(dirURL, [".mp4"]);
+        videoDirURL = `${homeDir}/Videos`;
+        videoHomeWindow = await createWindow(
+            "./src/FRONT/videoHome/videoHome.html"
+        );
+        const videoNames = await getAllFileInSpecificDir(videoDirURL, ".mp4");
         videoHomeWindow.once("ready-to-show", () => {
             videoHomeWindow.webContents.send("kunal", { videoNames });
         });
@@ -65,33 +87,41 @@ const main = async () => {
             videoItemWindow,
             isSortByTime,
             getAllFileInSpecificDir,
-            dirURL,
+            videoDirURL,
             homeDir
         );
 
         //gets file from the given path and sends the video paths to videoHomeScreenMenu
         ipcMain.on("reloadVideoInSpecificDir", async (e, d) => {
-            dirURL = d;
-            const videoNames = await getAllFileInSpecificDir(d, [".mp4"]);
+            videoDirURL = d;
+            const videoNames = await getAllFileInSpecificDir(d, ".mp4");
             videoHomeWindow.webContents.send("kunal", { videoNames });
         });
     });
 
     ipcMain.on("openAudioWindow", async () => {
-        dirURL = `${homeDir}/Music`;
+        audioDirURL = `${homeDir}/Music`;
         AudioHomeWindow = await createWindow(
             "./src/FRONT/AudioHome/AudioHome.html"
         );
-        const audioNames = await getAllFileInSpecificDir(dirURL, [".mp3"]);
+        const audioNames = await getAllFileInSpecificDir(audioDirURL, ".mp3");
         AudioHomeWindow.once("ready-to-show", () => {
             AudioHomeWindow.webContents.send("audioURLS", { audioNames });
         });
 
-        //gets file from the given path and sends the video paths to audioHomeScreenMenu
-        ipcMain.on("reloadVideoInSpecificDir", async (e, d) => {
-            dirURL = d;
-            const videoNames = await getAllFileInSpecificDir(d, [".mp3"]);
-            AudioHomeWindow.webContents.send("kunal", { videoNames });
+        //gets file from the given path and sends the audio dir paths to audioHomeScreenMenu
+        ipcMain.on("reloadAudioInSpecificDir", async (e, d) => {
+            audioDirURL = d;
+            const AudioNames = await getAllFileInSpecificDir(d, ".mp3");
+            AudioHomeWindow.webContents.send("AudioReloadData", { AudioNames });
+        });
+        //Reload the same folder
+        ipcMain.on("reloadAudioHomeScreenRequestInSameDir", async () => {
+            const AudioNames = await getAllFileInSpecificDir(
+                audioDirURL,
+                ".mp3"
+            );
+            AudioHomeWindow.webContents.send("AudioReloadData", { AudioNames });
         });
     });
 
@@ -111,11 +141,22 @@ const main = async () => {
         }, 1000);
     });
 
+    ipcMain.on("audioItemCall", async (e, data) => {
+        AudioItemWindow = await createWindow(
+            "./src/FRONT/AudioItem/AudioItem.html",
+            325,
+            720
+        );
+        setTimeout(() => {
+            AudioItemWindow.webContents.send("audioItemData", data);
+        }, 1000);
+        AudioItemWindow.resizable = false;
+    });
+
     ipcMain.on("hideFile", (_, { path, password }) => {
         const data = fs.readFileSync(path, { encoding: "base64" });
         const name = path.split("\\").reverse()[0];
         const type = path.split(".").reverse()[0];
-        console.log("name", name, "password", password, "path", path);
 
         let algorithm = "aes-256-cbc";
         const key = getKey(password);
@@ -136,6 +177,7 @@ const main = async () => {
                 data: encrypted,
             })
         );
+        fs.unlinkSync(path);
     });
 
     ipcMain.on("getData", () => {
@@ -160,13 +202,10 @@ const main = async () => {
     });
 
     ipcMain.on("previewDataRequest", (_, { password, name }) => {
-        console.log(password, name);
         let algorithm = "aes-256-cbc";
         const key = getKey(password);
         const hidden = fs.readdirSync("./hidden");
-        console.log("hidden", hidden);
         const jsonFiles = hidden.filter((e) => e.includes(name));
-        console.log(jsonFiles.length);
         const json = fs.readFileSync(`./hidden/${jsonFiles[0]}`).toString();
         const { iv, data, type } = JSON.parse(json);
 
@@ -176,7 +215,23 @@ const main = async () => {
         SecretFolderWindow.webContents.send("previewDataResponce", {
             data: decrypted,
             type,
+            name,
         });
+    });
+
+    ipcMain.on("unhideFileRequest", (_, { password, name }) => {
+        let algorithm = "aes-256-cbc";
+        const key = getKey(password);
+        const hidden = fs.readdirSync("./hidden");
+        const jsonFiles = hidden.filter((e) => e.includes(name));
+        const json = fs.readFileSync(`./hidden/${jsonFiles[0]}`).toString();
+        const { iv, data, type, path } = JSON.parse(json);
+
+        let decipher = crypto.createDecipheriv(algorithm, key, iv);
+        let decrypted =
+            decipher.update(data, "hex", "utf8") + decipher.final("utf8");
+        fs.writeFileSync(path, decrypted, { encoding: "base64" });
+        fs.unlinkSync(`./hidden/${jsonFiles[0]}`);
     });
 };
 

@@ -1,78 +1,4 @@
 const { ipcRenderer, remote } = require("electron");
-const React = require("react");
-const ReactDom = require("react-dom");
-
-let URLS = [];
-const audioContainer = document.getElementById("AudioContainer");
-
-ipcRenderer.on("audioURLS", (_, urls) => {
-    URLS = urls.audioNames;
-    loadAudioItems();
-});
-
-const AudioItem = ({ item, index }) => {
-    return /*#__PURE__*/ React.createElement(
-        "div",
-        {
-            className: "AudioItem",
-            onClick: () => onAudioItemClickHandler(item),
-        },
-        /*#__PURE__*/ React.createElement(
-            "h3",
-            {
-                className: "AudioItem__h3__name",
-            },
-            `${index + 1}). ${item.name}`
-        ),
-        /*#__PURE__*/ React.createElement(
-            "p",
-            {
-                className: "AudioItem__p__path",
-            },
-            item.path
-        )
-    );
-};
-
-const AudioElement = () => {
-    return /*#__PURE__*/ React.createElement(
-        "div",
-        {
-            className: "AudioElement",
-        },
-        URLS.lenght === 0
-            ? /*#__PURE__*/ React.createElement(
-                  "div",
-                  {
-                      className: "VideoElement__no_video_yet__container",
-                  },
-                  /*#__PURE__*/ React.createElement(
-                      "p",
-                      {
-                          className: "VideoElement__no_video_yet__p",
-                      },
-                      "No Audio Yet!"
-                  )
-              )
-            : /*#__PURE__*/ React.createElement(
-                  "div",
-                  {
-                      className: "VideoElement__AudioItem__container",
-                  },
-                  URLS.map((e, index) =>
-                      /*#__PURE__*/ React.createElement(AudioItem, {
-                          key: index,
-                          item: e,
-                          index: index,
-                      })
-                  )
-              )
-    );
-};
-
-function loadAudioItems() {
-    ReactDom.render(AudioElement(), document.getElementById("root"));
-}
 
 //Audio player code
 
@@ -99,15 +25,17 @@ let volume = 0.4;
 let currentPath = "";
 const audio = document.createElement("audio");
 
-function onAudioItemClickHandler(item) {
-    const { name, path } = item;
+function onAudioItemClickHandler({ name, path }) {
     currentPath = path;
     AudioName.innerText = name.slice(0, 65);
     audio.src = path;
     range.value = 0;
     Controls_container.appendChild(audio);
-    audioContainer.className = "AudioContainer__show";
 }
+
+ipcRenderer.on("audioItemData", (_, item) => {
+    onAudioItemClickHandler(item);
+});
 
 const playPauseHandler = () => {
     if (isPlaying) {
@@ -156,8 +84,7 @@ const TenSecondsBackWardHandler = () => {
     }
 };
 const cancelAudioHandler = () => {
-    Controls_container.removeChild(audio);
-    audioContainer.className = "AudioContainer__hide";
+    closeWindowHandler();
 };
 const nextAudioHandler = () => {
     const currentIndex = URLS.findIndex((e) => e.path === currentPath);
@@ -214,27 +141,6 @@ function setInfo() {
 
 setInfo();
 
-const openDirSelector = async () => {
-    const dialog = remote.dialog;
-
-    var path = await dialog.showOpenDialog({
-        properties: ["openDirectory"],
-    });
-    ipcRenderer.send("reloadAudioInSpecificDir", path.filePaths[0]);
-};
-
-ipcRenderer.on("AudioReloadData", (e, { AudioNames }) => {
-    URLS = AudioNames;
-    loadAudioItems();
-});
-
-const reloadSameDirRequest = () => {
-    ipcRenderer.send(
-        "reloadAudioHomeScreenRequestInSameDir",
-        "reloadAudioHomeScreenRequestInSameDir"
-    );
-};
-
 //Windows three main controls
 const minimise = document.getElementById("minimise");
 const maximise = document.getElementById("maximise");
@@ -246,9 +152,9 @@ const minimiseHandler = () => {
 const maximiseHandler = () => {
     remote.getCurrentWindow().maximize();
 };
-const closeWindowHandler = () => {
+function closeWindowHandler() {
     remote.getCurrentWindow().close();
-};
+}
 
 minimise.onclick = minimiseHandler;
 maximise.onclick = maximiseHandler;
@@ -288,12 +194,6 @@ window.onkeypress = (e) => {
             break;
         case "b":
             TenSecondsBackWardHandler();
-            break;
-        case "Z":
-            openDirSelector();
-            break;
-        case "R":
-            reloadSameDirRequest();
             break;
     }
 };

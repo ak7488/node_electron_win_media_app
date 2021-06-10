@@ -2,7 +2,7 @@ const fs = require("fs");
 
 //providedPath = path in which all asked filed to be searched
 //fileTypeArray = all the file type which this function will search for in the provided path
-const getAllFileInSpecificDir = async (providedPath, fileTypeArray) => {
+const getAllFileInSpecificDir = async (providedPath, fileType) => {
     try {
         let Files = [];
 
@@ -17,18 +17,16 @@ const getAllFileInSpecificDir = async (providedPath, fileTypeArray) => {
                     e(`${path}/${f}`);
                 } else {
                     //checking for file type match
-                    fileTypeArray.forEach((fileType) => {
-                        if (f.includes(fileType)) {
-                            const currentPath = `${path}/${f}`;
-                            const { mtime, size } = fs.statSync(currentPath);
-                            Files.push({
-                                path: currentPath,
-                                name: f,
-                                mtime,
-                                size,
-                            });
-                        }
-                    });
+                    if (f.includes(fileType)) {
+                        const currentPath = `${path}/${f}`;
+                        const { mtime, size } = fs.statSync(currentPath);
+                        Files.push({
+                            path: currentPath,
+                            name: f,
+                            mtime,
+                            size,
+                        });
+                    }
                 }
             });
         };

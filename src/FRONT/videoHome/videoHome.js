@@ -78,20 +78,6 @@ ipcRenderer.on("kunal", (e, { videoNames }) => {
     addVideo();
 });
 
-let isShow = false;
-
-document.getElementById("shortCuts").style.display = "none";
-
-ipcRenderer.on("toggleShwoShortCuts", () => {
-    if (isShow) {
-        document.getElementById("shortCuts").style.display = "none";
-        isShow = false;
-    } else {
-        document.getElementById("shortCuts").style.display = "block";
-        isShow = true;
-    }
-});
-
 let isFormShow = false;
 
 ipcRenderer.on("toggleV", () => {
@@ -120,7 +106,7 @@ ipcRenderer.on("toggleV", () => {
 });
 
 ipcRenderer.on("requestFileDir", async () => {
-    const { dialog } = require("electron").remote;
+    const dialog = remote.dialog;
 
     var path = await dialog.showOpenDialog({
         properties: ["openDirectory"],

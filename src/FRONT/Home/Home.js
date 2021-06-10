@@ -9,15 +9,12 @@ const close = document.getElementById("close");
 
 const openVideoWindowHandler = () => {
     ipcRenderer.send("openVideoWindow", "openVideoWindow");
-    console.log("ok");
 };
 const openAudioWindowHandler = () => {
     ipcRenderer.send("openAudioWindow", "openAudioWindow");
-    console.log("ok");
 };
 const openSecretFolderWindowHandler = () => {
     ipcRenderer.send("openSecretFolderWindow", "openSecretFolderWindow");
-    console.log("ok");
 };
 const minimiseHandler = () => {
     remote.getCurrentWindow().minimize();

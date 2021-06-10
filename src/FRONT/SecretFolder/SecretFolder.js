@@ -34,6 +34,15 @@ HideButton.onclick = HideFileHandler;
 
 let pathOfTheFileWhichToBeHideen = "";
 let items = [];
+let isPasswordInputOneFocused = false;
+let isPasswordInputTwoFocused = false;
+
+passwordInput.addEventListener("focusin", () => {
+    isPasswordInputOneFocused = true;
+});
+passwordInput.addEventListener("focusout", () => {
+    isPasswordInputOneFocused = false;
+});
 
 function ShowOrHideSetAndGetHandler(e) {
     const value = e.target.value;
@@ -85,19 +94,21 @@ ipcRenderer.on("data", (_, data) => {
     loadFileItems();
 });
 
-ipcRenderer.on("previewDataResponce", (_, { data, type }) => {
+ipcRenderer.on("previewDataResponce", (_, { data, type, name }) => {
     let element;
     if (preview.className.includes("hide")) {
         if (type === "jpg" || type === "png" || type === "jpeg") {
             element = document.createElement("img");
             element.src = `data:image/${type};base64,${data}`;
         } else if (type === "mp4") {
-            element = document.createElement("video");
-            element.src = `data:video/${type};base64,${data}`;
-            element.controls = true;
+            const src = `data:video/${type};base64,${data}`;
+            const item = { path: src, name };
+            const VideoNames = [item];
+            ipcRenderer.send("videos", { VideoNames, item });
+            return;
         } else if (type === "mp3") {
-            element = document.createElement("audio");
-            element.src = `data:audio/${type};base64,${data}`;
+            const src = `data:audio/${type};base64,${data}`;
+            ipcRenderer.send("audioItemCall", { name, path: src });
         }
         element.className = "preview_element";
         preview.className = "preview";
@@ -127,6 +138,12 @@ function hideOrShowPrompt({ type, name, path }) {
         closePromptButton.innerText = "Close";
         passwordInput.type = "password";
         passwordInput.autofocus = true;
+        passwordInput.addEventListener("focusin", () => {
+            isPasswordInputOneFocused = true;
+        });
+        passwordInput.addEventListener("focusout", () => {
+            isPasswordInputOneFocused = false;
+        });
 
         previewFileButton.className = "prompt_btn";
         unHideFileButton.className = "prompt_btn";
@@ -154,6 +171,15 @@ function hideOrShowPrompt({ type, name, path }) {
             prompt.removeChild(promptInner);
         };
         closePromptButton.onclick = () => {
+            prompt.className = "prompt hide";
+            prompt.removeChild(promptInner);
+        };
+        unHideFileButton.onclick = () => {
+            if (!passwordInput.value) return;
+            ipcRenderer.send("unhideFileRequest", {
+                password: passwordInput.value,
+                name: name,
+            });
             prompt.className = "prompt hide";
             prompt.removeChild(promptInner);
         };
@@ -241,6 +267,7 @@ function invertSelect() {
 }
 
 window.onkeypress = (e) => {
+    if (isPasswordInputOneFocused || isPasswordInputOneFocused) return;
     switch (e.key) {
         case "m":
             minimiseHandler();

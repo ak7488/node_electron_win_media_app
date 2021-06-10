@@ -27,25 +27,10 @@ function videoHomeScreenMenu(
                     },
                 },
                 {
-                    role: "Toggle shortcut table",
-                    accelerator: "f1",
-                    click: () => {
-                        win.webContents.send("toggleShwoShortCuts", "k");
-                    },
-                },
-                {
                     role: "Open video in specific directry",
                     accelerator: "f2",
                     click: () => {
                         win.webContents.send("requestFileDir", "k");
-                    },
-                },
-                {
-                    role: "open dev tools",
-                    accelerator: "f3",
-                    click: () => {
-                        win.webContents.openDevTools();
-                        videoItemWindow.webContents.openDevTools();
                     },
                 },
                 {
@@ -54,7 +39,7 @@ function videoHomeScreenMenu(
                     click: async () => {
                         const videoNames = await getAllFileInSpecificDir(
                             dirURL,
-                            [".mp4"]
+                            ".mp4"
                         );
                         if (isSortByTime) {
                             win.webContents.send("kunal", { videoNames });
@@ -68,13 +53,13 @@ function videoHomeScreenMenu(
                     },
                 },
                 {
-                    role: "reload main screen",
-                    accelerator: "r",
+                    role: "reload video main screen",
+                    accelerator: "Shift+R",
                     click: async () => {
                         win.reload();
                         const videoNames = await getAllFileInSpecificDir(
                             `${homeDir}/Videos`,
-                            [".mp4"]
+                            ".mp4"
                         );
                         setTimeout(() => {
                             win.webContents.send("kunal", { videoNames });
