@@ -105,6 +105,7 @@ function onAudioItemClickHandler(item) {
     AudioName.innerText = name.slice(0, 65);
     audio.src = path;
     range.value = 0;
+    audio.play();
     Controls_container.appendChild(audio);
     audioContainer.className = "AudioContainer__show";
 }

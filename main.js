@@ -19,6 +19,7 @@ const { app, globalShortcut, ipcMain, Menu } = electron;
 const menu = new Menu();
 
 const main = async () => {
+    createHiddenFunctionIfNotExists();
     const win = await app.whenReady().then(async () => {
         return await createWindow("./src/FRONT/Home/Home.html");
     });
@@ -234,6 +235,14 @@ const main = async () => {
         fs.unlinkSync(`./hidden/${jsonFiles[0]}`);
     });
 };
+
+function createHiddenFunctionIfNotExists() {
+    const files = fs.readdirSync("./");
+    const isHiddenFileExists = files.includes("hidden");
+    if (!isHiddenFileExists) {
+        fs.mkdirSync("./hidden");
+    }
+}
 
 function getKey(password) {
     let key = password;
