@@ -1,8 +1,8 @@
 {
-    "name": "video-app",
-    "productName": "Video",
-    "version": "2.0.1",
-    "description": "A video app for desktop",
+    "name": "media-player",
+    "productName": "Media player",
+    "version": "2.1.1",
+    "description": "A Media app for desktop width hidden and safe folder",
     "main": "main.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",

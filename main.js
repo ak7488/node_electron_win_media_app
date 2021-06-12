@@ -19,7 +19,7 @@ const { app, globalShortcut, ipcMain, Menu } = electron;
 const menu = new Menu();
 
 const main = async () => {
-    createHiddenFunctionIfNotExists();
+    createFolderOrFileIfNotExists("./", "hidden", true);
     const win = await app.whenReady().then(async () => {
         return await createWindow("./src/FRONT/Home/Home.html");
     });
@@ -132,13 +132,29 @@ const main = async () => {
         }
     });
 
-    ipcMain.on("videos", async (e, d) => {
+    ipcMain.on("videos", async (e, data) => {
+        createFolderOrFileIfNotExists(
+            "./",
+            "videoData.json",
+            false,
+            JSON.stringify([])
+        );
+        const VideoDataJson = fs.readFileSync("./videoData.json").toString();
+        let VideoDataArray = JSON.parse(VideoDataJson);
+        VideoDataArray = VideoDataArray.filter((e) => e.name == data.item.name);
+
         //creating videoScreen and sending video path and other info with 1 sec delay
         videoItemWindow = await createWindow(
             "./src/FRONT/videoItem/VideoItem.html"
         );
         setTimeout(() => {
-            videoItemWindow.webContents.send("videoItemData", d);
+            if (VideoDataArray.length !== 0) {
+                videoItemWindow.webContents.send(
+                    "videoData",
+                    VideoDataArray[0]
+                );
+            }
+            videoItemWindow.webContents.send("videoItemData", data);
         }, 1000);
     });
 
@@ -234,13 +250,42 @@ const main = async () => {
         fs.writeFileSync(path, decrypted, { encoding: "base64" });
         fs.unlinkSync(`./hidden/${jsonFiles[0]}`);
     });
+
+    ipcMain.on(
+        "sendVideoDataToMain",
+        (_, { currentTime, volume, name, videoPlayBackSpeed }) => {
+            createFolderOrFileIfNotExists(
+                "./",
+                "videoData.json",
+                false,
+                JSON.stringify([])
+            );
+            const dataJson = fs.readFileSync("./videoData.json").toString();
+            let data = JSON.parse(dataJson);
+            data = data.filter((e) => e.name !== name);
+            const VideoData = [
+                ...data,
+                { currentTime, volume, name, videoPlayBackSpeed },
+            ];
+            fs.writeFileSync("./videoData.json", JSON.stringify(VideoData));
+        }
+    );
 };
 
-function createHiddenFunctionIfNotExists() {
-    const files = fs.readdirSync("./");
-    const isHiddenFileExists = files.includes("hidden");
-    if (!isHiddenFileExists) {
-        fs.mkdirSync("./hidden");
+function createFolderOrFileIfNotExists(
+    pathToSearch,
+    fileOrFolderName,
+    isDir,
+    defaultData
+) {
+    const files = fs.readdirSync(pathToSearch);
+    const isGivenFileOrFolderExists = files.includes(fileOrFolderName);
+    if (!isGivenFileOrFolderExists) {
+        if (isDir) {
+            fs.mkdirSync(`${pathToSearch}${fileOrFolderName}`);
+        } else {
+            fs.writeFileSync(`${pathToSearch}${fileOrFolderName}`, defaultData);
+        }
     }
 }
 

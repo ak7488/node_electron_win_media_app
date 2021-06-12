@@ -7,6 +7,7 @@ let volume = 0.6;
 let videoPlayBackSpeed = 1;
 let isPlaying = false;
 let isFullScreen = false;
+let name = "";
 
 ipcRenderer.on("videoItemData", (e, d) => {
     item = d.item;
@@ -29,6 +30,10 @@ function setVideo(item) {
     document.getElementById(
         "playbackSpeed"
     ).innerText = `Playback Speed: ${videoPlayBackSpeed}`;
+    name = item.name;
+    setInterval(() => {
+        sendVideoDataToMain();
+    }, 10000);
 }
 
 function previousVideoHandler() {
@@ -126,12 +131,38 @@ const maximiseHandler = () => {
     remote.getCurrentWindow().maximize();
 };
 const closeWindowHandler = () => {
-    remote.getCurrentWindow().close();
+    sendVideoDataToMain();
+    setTimeout(() => {
+        remote.getCurrentWindow().close();
+    }, 500);
 };
 
 minimise.onclick = minimiseHandler;
 maximise.onclick = maximiseHandler;
 close.onclick = closeWindowHandler;
+
+function sendVideoDataToMain() {
+    ipcRenderer.send("sendVideoDataToMain", {
+        currentTime: video.currentTime,
+        volume,
+        name,
+        videoPlayBackSpeed,
+    });
+}
+
+ipcRenderer.on("videoData", (_, data) => {
+    const {
+        currentTime: ct,
+        name: n,
+        videoPlayBackSpeed: vpb,
+        volume: vol,
+    } = data;
+    video.currentTime = ct;
+    video.volume = vol;
+    video.playbackRate = vpb;
+    volume = vol;
+    videoPlayBackSpeed = vpb;
+});
 
 document.onkeypress = (e) => {
     switch (e.key) {
