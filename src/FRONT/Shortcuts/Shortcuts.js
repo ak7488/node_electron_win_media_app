@@ -56,6 +56,7 @@ const shortCutArrayVideoItem = [
     ["f", "10 sec forward"],
     ["b", "10 sec backward"],
     ["w", "Toggle full screen"],
+    ["o", "save video data to open it again with same configration"],
     ["Shift + F", "Increase play back speed"],
     ["Shift + B", "Decrease play back speed"],
 ];

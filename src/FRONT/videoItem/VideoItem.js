@@ -31,9 +31,6 @@ function setVideo(item) {
         "playbackSpeed"
     ).innerText = `Playback Speed: ${videoPlayBackSpeed}`;
     name = item.name;
-    setInterval(() => {
-        sendVideoDataToMain();
-    }, 10000);
 }
 
 function previousVideoHandler() {
@@ -131,7 +128,6 @@ const maximiseHandler = () => {
     remote.getCurrentWindow().maximize();
 };
 const closeWindowHandler = () => {
-    sendVideoDataToMain();
     setTimeout(() => {
         remote.getCurrentWindow().close();
     }, 500);
@@ -208,6 +204,9 @@ document.onkeypress = (e) => {
             break;
         case "w":
             fullScreen();
+            break;
+        case "o":
+            sendVideoDataToMain();
             break;
     }
 };

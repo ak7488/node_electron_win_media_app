@@ -161,6 +161,8 @@ window.onkeydown = (e) => {
         a.push(e.key)
     } else if (e.key === 'Enter' && b < VideoNames.length && b > 0) {
         onVideoItemClickHandler(VideoNames[b - 1]);
+        dis.className = 'dis'
+        numInput.innerText = ''
     }
     if (a.length > 0) {
         dis.className = 'dis show'
