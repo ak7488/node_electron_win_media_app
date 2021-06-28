@@ -144,7 +144,7 @@ close.onclick = closeWindowHandler;
 function sendVideoDataToMain() {
     ipcRenderer.send("sendVideoDataToMain", {
         currentTime: video.currentTime,
-        volume,
+        volume: volume,
         name,
         videoPlayBackSpeed,
     });
@@ -158,8 +158,8 @@ ipcRenderer.on("videoData", (_, data) => {
         volume: vol,
     } = data;
     video.currentTime = ct;
-    video.volume = vol;
     video.playbackRate = vpb;
+    video.volume = vol;
     volume = vol;
     videoPlayBackSpeed = vpb;
 });

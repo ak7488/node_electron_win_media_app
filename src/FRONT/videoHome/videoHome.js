@@ -41,31 +41,31 @@ const VideoElement = () => {
         },
         VideoNames.lenght === 0
             ? /*#__PURE__*/ React.createElement(
-                  "div",
-                  {
-                      className: "VideoElement__no_video_yet__container",
-                  },
+                "div",
+                {
+                    className: "VideoElement__no_video_yet__container",
+                },
                   /*#__PURE__*/ React.createElement(
-                      "p",
-                      {
-                          className: "VideoElement__no_video_yet__p",
-                      },
-                      "No Video Yet!"
-                  )
-              )
+                    "p",
+                    {
+                        className: "VideoElement__no_video_yet__p",
+                    },
+                    "No Video Yet!"
+                )
+            )
             : /*#__PURE__*/ React.createElement(
-                  "div",
-                  {
-                      className: "VideoElement__videoItem__container",
-                  },
-                  VideoNames.map((e, index) =>
+                "div",
+                {
+                    className: "VideoElement__videoItem__container",
+                },
+                VideoNames.map((e, index) =>
                       /*#__PURE__*/ React.createElement(VideoItem, {
-                          key: index,
-                          item: e,
-                          index: index,
-                      })
-                  )
-              )
+                    key: index,
+                    item: e,
+                    index: index,
+                })
+                )
+            )
     );
 };
 
@@ -78,32 +78,32 @@ ipcRenderer.on("kunal", (e, { videoNames }) => {
     addVideo();
 });
 
-let isFormShow = false;
+// let isFormShow = false;
 
-ipcRenderer.on("toggleV", () => {
-    const form = document.getElementById("form");
-    const input = document.getElementById("input");
-    const root = document.getElementById("root");
+// ipcRenderer.on("toggleV", () => {
+//     const form = document.getElementById("form");
+//     const input = document.getElementById("input");
+//     const root = document.getElementById("root");
 
-    root.scrollTo(0, 0);
+//     root.scrollTo(0, 0);
 
-    if (isFormShow) {
-        form.className = "form_show";
-        isFormShow = !isFormShow;
-        input.focus();
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            const number = input.value;
-            if (!number || number > VideoNames.length || number < 0)
-                return (number = 0);
-            onVideoItemClickHandler(VideoNames[number - 1]);
-        });
-    } else {
-        form.className = "";
-        isFormShow = !isFormShow;
-        root.focus();
-    }
-});
+//     if (isFormShow) {
+//         form.className = "form_show";
+//         isFormShow = !isFormShow;
+//         input.focus();
+//         form.addEventListener("submit", (e) => {
+//             e.preventDefault();
+//             const number = input.value;
+//             if (!number || number > VideoNames.length || number < 0)
+//                 return (number = 0);
+//             onVideoItemClickHandler(VideoNames[number - 1]);
+//         });
+//     } else {
+//         form.className = "";
+//         isFormShow = !isFormShow;
+//         root.focus();
+//     }
+// });
 
 ipcRenderer.on("requestFileDir", async () => {
     const dialog = remote.dialog;
@@ -146,3 +146,26 @@ document.onkeypress = (e) => {
             break;
     }
 };
+
+//video open by number
+let a = []
+const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+const dis = document.getElementById('dis')
+const numInput = document.getElementById('numInput')
+
+window.onkeydown = (e) => {
+    const b = parseInt(a.toString().replace(/\,/g, ''))
+    if (e.key === 'Backspace' && a.length > 0) {
+        a.pop();
+    } else if (num.includes(e.key)) {
+        a.push(e.key)
+    } else if (e.key === 'Enter' && b < VideoNames.length && b > 0) {
+        onVideoItemClickHandler(VideoNames[b - 1]);
+    }
+    if (a.length > 0) {
+        dis.className = 'dis show'
+        numInput.innerText = 'Video num: ' + a.toString().replace(/\,/g, '')
+    } else {
+        dis.className = 'dis'
+    }
+}

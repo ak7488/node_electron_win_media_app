@@ -20,13 +20,6 @@ function videoHomeScreenMenu(
             label: "shortcuts",
             submenu: [
                 {
-                    role: "Toggle shortcut input",
-                    accelerator: "Alt+v",
-                    click: () => {
-                        win.webContents.send("toggleV", "k");
-                    },
-                },
-                {
                     role: "Open video in specific directry",
                     accelerator: "f2",
                     click: () => {
