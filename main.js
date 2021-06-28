@@ -97,6 +97,15 @@ const main = async () => {
             videoDirURL = d;
             const videoNames = await getAllFileInSpecificDir(d, ".mp4");
             videoHomeWindow.webContents.send("kunal", { videoNames });
+            videoHomeScreenMenu(
+                menu,
+                videoHomeWindow,
+                videoItemWindow,
+                isSortByTime,
+                getAllFileInSpecificDir,
+                videoDirURL,
+                homeDir
+            );
         });
     });
 
