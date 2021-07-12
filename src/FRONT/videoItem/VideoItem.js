@@ -256,12 +256,7 @@ window.onkeydown = (e) => {
         a.pop();
     } else if (num.includes(e.key)) {
         a.push(e.key)
-    } else if (e.key === 'Enter' && b < VideoNames.length && b > 0) {
-        onVideoItemClickHandler(VideoNames[b - 1]);
-        dis.className = 'dis'
-        numInput.innerText = ''
-    }
-    if (a.length > 0) {
+    } else if (a.length > 0) {
         dis.className = 'dis show'
         numInput.innerText = 'Video num: ' + a.toString().replace(/\,/g, '')
     } else {
