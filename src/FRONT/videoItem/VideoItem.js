@@ -8,6 +8,7 @@ let videoPlayBackSpeed = 1;
 let isPlaying = false;
 let isFullScreen = false;
 let name = "";
+let varNum = 0
 
 ipcRenderer.on("videoItemData", (e, d) => {
     item = d.item;
@@ -35,27 +36,39 @@ function setVideo(item) {
 
 function previousVideoHandler() {
     if (videos.length === 0 || index === 0) return;
-    setVideo(videos[index - 1]);
+    setVideo(varNum > 0 ? videos[index - varNum] : videos[index - 1]);
+    dis.className = 'dis'
+    numInput.innerText = ''
+    a = []
 }
 
 function nextVideoHandler() {
     if (videos.length === 0 || index === videos.length - 1) return;
-    setVideo(videos[index + 1]);
+    setVideo(varNum > 0 ? videos[index + varNum] : videos[index + 1]);
+    dis.className = 'dis'
+    numInput.innerText = ''
+    a = []
 }
 
-function videoVolumeUp() {
-    video.volume = volume + 0.1;
-    volume = volume + 0.1;
+function videoVolumeUp(e) {
+    video.volume = volume + e;
+    volume = volume + e;
     document.getElementById("Volume").innerText = `Volume: ${Math.ceil(
         volume * 10
     )}`;
+    dis.className = 'dis'
+    numInput.innerText = ''
+    a = []
 }
-function videoVolumeDown() {
-    video.volume = volume - 0.1;
-    volume = volume - 0.1;
+function videoVolumeDown(e) {
+    video.volume = volume - e;
+    volume = volume - e;
     document.getElementById("Volume").innerText = `Volume: ${Math.ceil(
         volume * 10
     )}`;
+    dis.className = 'dis'
+    numInput.innerText = ''
+    a = []
 }
 
 function startVideo() {
@@ -87,16 +100,16 @@ video.addEventListener("fullscreenchange", (e) => {
     isFullScreen = !isFullScreen;
 });
 
-const tenSecondsForward = () => {
-    if (video.duration <= video.currentTime + 10) return;
-    video.currentTime = video.currentTime + 10;
+const tenSecondsForward = (e) => {
+    if (video.duration <= video.currentTime + e) return;
+    video.currentTime = video.currentTime + e;
 };
 
-const tenSecondsBackword = () => {
-    if (video.currentTime - 10 <= 0) {
+const tenSecondsBackword = (e) => {
+    if (video.currentTime - e <= 0) {
         video.currentTime = 0;
     } else {
-        video.currentTime = video.currentTime - 10;
+        video.currentTime = video.currentTime - e;
     }
 };
 
@@ -178,10 +191,10 @@ document.onkeypress = (e) => {
             previousVideoHandler();
             break;
         case "u":
-            videoVolumeUp();
+            videoVolumeUp(varNum > 0 && varNum <= 10 ? (varNum / 10) : 0.1);
             break;
         case "d":
-            videoVolumeDown();
+            videoVolumeDown(varNum > 0 && varNum <= 10 ? varNum / 10 : 0.1);
             break;
         case "s":
             if (isPlaying) {
@@ -191,16 +204,36 @@ document.onkeypress = (e) => {
             }
             break;
         case "f":
-            tenSecondsForward();
+            tenSecondsForward(varNum > 0 ? varNum : 10);
+            dis.className = 'dis'
+            numInput.innerText = ''
+            a = []
             break;
         case "b":
-            tenSecondsBackword();
+            tenSecondsBackword(varNum > 0 ? varNum : 10);
+            dis.className = 'dis'
+            numInput.innerText = ''
+            a = []
             break;
         case "F":
-            videoPlayBackSpeedHandler(videoPlayBackSpeed + 0.5);
+            if (varNum > 0) {
+                videoPlayBackSpeedHandler(videoPlayBackSpeed + varNum);
+                dis.className = 'dis'
+                numInput.innerText = ''
+                a = []
+            } else {
+                videoPlayBackSpeedHandler(videoPlayBackSpeed + 0.5);
+            }
             break;
         case "B":
-            videoPlayBackSpeedHandler(videoPlayBackSpeed - 0.5);
+            if (varNum > 0) {
+                videoPlayBackSpeedHandler(videoPlayBackSpeed - varNum);
+                dis.className = 'dis'
+                numInput.innerText = ''
+                a = []
+            } else {
+                videoPlayBackSpeedHandler(videoPlayBackSpeed - 0.5);
+            }
             break;
         case "w":
             fullScreen();
@@ -210,3 +243,28 @@ document.onkeypress = (e) => {
             break;
     }
 };
+
+//screen number operation
+let a = []
+const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
+const dis = document.getElementById('dis')
+const numInput = document.getElementById('numInput')
+
+window.onkeydown = (e) => {
+    varNum = parseInt(a.toString().replace(/\,/g, ''))
+    if (e.key === 'Backspace' && a.length > 0) {
+        a.pop();
+    } else if (num.includes(e.key)) {
+        a.push(e.key)
+    } else if (e.key === 'Enter' && b < VideoNames.length && b > 0) {
+        onVideoItemClickHandler(VideoNames[b - 1]);
+        dis.className = 'dis'
+        numInput.innerText = ''
+    }
+    if (a.length > 0) {
+        dis.className = 'dis show'
+        numInput.innerText = 'Video num: ' + a.toString().replace(/\,/g, '')
+    } else {
+        dis.className = 'dis'
+    }
+}

@@ -145,3 +145,30 @@ body {
     padding: 0px 10px;
     color: whitesmoke;
 }
+
+/* video item num handler */
+.dis {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.3);
+    display: none;
+}
+
+.show {
+    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.numInput {
+    padding: 10px;
+    background-color: whitesmoke;
+    color: black;
+    min-width: 10px;
+    min-height: 10px;
+}
