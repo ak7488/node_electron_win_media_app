@@ -258,7 +258,7 @@ window.onkeydown = (e) => {
         a.push(e.key)
     } else if (a.length > 0) {
         dis.className = 'dis show'
-        numInput.innerText = 'Video num: ' + a.toString().replace(/\,/g, '')
+        numInput.innerText = ' ' + a.toString().replace(/\,/g, '')
     } else {
         dis.className = 'dis'
     }

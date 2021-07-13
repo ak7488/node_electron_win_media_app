@@ -1,7 +1,7 @@
 {
     "name": "media-player",
     "productName": "Media player",
-    "version": "2.3.2",
+    "version": "2.3.3",
     "description": "A Media app for desktop width hidden and safe folder",
     "main": "main.js",
     "scripts": {
