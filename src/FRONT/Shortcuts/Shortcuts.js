@@ -44,7 +44,7 @@ const shortCutArrayVideoHome = [
     ["f2", "Open video in specific file"],
     ["f4", "Sort video (name/time)"],
     ["Shift + R", "Reload video list"],
-    ["Alt + v", "Toggle screen open input"],
+    ["1,2,3,4,5,6,7,8,9,0", "select and open video by index"]
 ];
 
 const shortCutArrayVideoItem = [
@@ -59,6 +59,7 @@ const shortCutArrayVideoItem = [
     ["o", "save video data to open it again with same configration"],
     ["Shift + F", "Increase play back speed"],
     ["Shift + B", "Decrease play back speed"],
+    ["1,2,3,4,5,6,7,8,9,0", "Mangnitude by which to increase or deccrease ([3 + Shift + F] to increase playback speed by 3)"]
 ];
 
 const shortCutArrayAudioHome = [

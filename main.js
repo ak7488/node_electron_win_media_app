@@ -19,7 +19,7 @@ const { app, globalShortcut, ipcMain, Menu } = electron;
 const menu = new Menu();
 
 const main = async () => {
-    createFolderOrFileIfNotExists("./", "hidden", true);
+    createFolderOrFileIfNotExists(homeDir, "hidden", true);
     const win = await app.whenReady().then(async () => {
         return await createWindow("./src/FRONT/Home/Home.html");
     });
@@ -143,7 +143,7 @@ const main = async () => {
 
     ipcMain.on("videos", async (e, data) => {
         createFolderOrFileIfNotExists(
-            "./",
+            homeDir,
             "videoData.json",
             false,
             JSON.stringify([])
@@ -194,7 +194,7 @@ const main = async () => {
             cipher.update(data, "utf8", "hex") + cipher.final("hex");
 
         fs.writeFileSync(
-            `./hidden/${name}${randomForName}.json`,
+            `${homeDir}/hidden/${name}${randomForName}.json`,
             JSON.stringify({
                 iv: iv,
                 path: path,
@@ -208,11 +208,11 @@ const main = async () => {
 
     ipcMain.on("getData", () => {
         let dataArray = [];
-        const hidden = fs.readdirSync("./hidden");
+        const hidden = fs.readdirSync(`${homeDir}/hidden`);
         const jsonFiles = hidden.filter((e) => e.includes(".json"));
 
         jsonFiles.forEach((e) => {
-            const json = fs.readFileSync(`./hidden/${e}`).toString();
+            const json = fs.readFileSync(`${homeDir}/hidden/${e}`).toString();
             const { name, path, type } = JSON.parse(json);
 
             dataArray = [
@@ -230,9 +230,9 @@ const main = async () => {
     ipcMain.on("previewDataRequest", (_, { password, name }) => {
         let algorithm = "aes-256-cbc";
         const key = getKey(password);
-        const hidden = fs.readdirSync("./hidden");
+        const hidden = fs.readdirSync(`${homeDir}/hidden`);
         const jsonFiles = hidden.filter((e) => e.includes(name));
-        const json = fs.readFileSync(`./hidden/${jsonFiles[0]}`).toString();
+        const json = fs.readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`).toString();
         const { iv, data, type } = JSON.parse(json);
 
         let decipher = crypto.createDecipheriv(algorithm, key, iv);
@@ -248,35 +248,35 @@ const main = async () => {
     ipcMain.on("unhideFileRequest", (_, { password, name }) => {
         let algorithm = "aes-256-cbc";
         const key = getKey(password);
-        const hidden = fs.readdirSync("./hidden");
+        const hidden = fs.readdirSync(`${homeDir}/hidden`);
         const jsonFiles = hidden.filter((e) => e.includes(name));
-        const json = fs.readFileSync(`./hidden/${jsonFiles[0]}`).toString();
+        const json = fs.readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`).toString();
         const { iv, data, type, path } = JSON.parse(json);
 
         let decipher = crypto.createDecipheriv(algorithm, key, iv);
         let decrypted =
             decipher.update(data, "hex", "utf8") + decipher.final("utf8");
         fs.writeFileSync(path, decrypted, { encoding: "base64" });
-        fs.unlinkSync(`./hidden/${jsonFiles[0]}`);
+        fs.unlinkSync(`${homeDir}/hidden/${jsonFiles[0]}`);
     });
 
     ipcMain.on(
         "sendVideoDataToMain",
         (_, { currentTime, volume, name, videoPlayBackSpeed }) => {
             createFolderOrFileIfNotExists(
-                "./",
+                homeDir,
                 "videoData.json",
                 false,
                 JSON.stringify([])
             );
-            const dataJson = fs.readFileSync("./videoData.json").toString();
+            const dataJson = fs.readFileSync(`${homeDir}/videoData.json`).toString();
             let data = JSON.parse(dataJson);
             data = data.filter((e) => e.name !== name);
             const VideoData = [
                 ...data,
                 { currentTime, volume, name, videoPlayBackSpeed },
             ];
-            fs.writeFileSync("./videoData.json", JSON.stringify(VideoData));
+            fs.writeFileSync(`${homeDir}/videoData.json`, JSON.stringify(VideoData));
         }
     );
 };
@@ -291,9 +291,9 @@ function createFolderOrFileIfNotExists(
     const isGivenFileOrFolderExists = files.includes(fileOrFolderName);
     if (!isGivenFileOrFolderExists) {
         if (isDir) {
-            fs.mkdirSync(`${pathToSearch}${fileOrFolderName}`);
+            fs.mkdirSync(`${pathToSearch}/${fileOrFolderName}`);
         } else {
-            fs.writeFileSync(`${pathToSearch}${fileOrFolderName}`, defaultData);
+            fs.writeFileSync(`${pathToSearch}/${fileOrFolderName}`, defaultData);
         }
     }
 }
