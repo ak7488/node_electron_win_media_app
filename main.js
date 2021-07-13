@@ -148,7 +148,7 @@ const main = async () => {
             false,
             JSON.stringify([])
         );
-        const VideoDataJson = fs.readFileSync("./videoData.json").toString();
+        const VideoDataJson = fs.readFileSync(`${homeDir}/videoData.json`).toString();
         let VideoDataArray = JSON.parse(VideoDataJson);
         VideoDataArray = VideoDataArray.filter((e) => e.name == data.item.name);
 

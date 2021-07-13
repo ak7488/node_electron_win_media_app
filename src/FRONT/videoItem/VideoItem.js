@@ -204,16 +204,24 @@ document.onkeypress = (e) => {
             }
             break;
         case "f":
-            tenSecondsForward(varNum > 0 ? varNum : 10);
-            dis.className = 'dis'
-            numInput.innerText = ''
-            a = []
+            if (varNum > 0) {
+                tenSecondsForward(varNum);
+                dis.className = 'dis'
+                numInput.innerText = ''
+                a = []
+            } else {
+                tenSecondsForward(10);
+            }
             break;
         case "b":
-            tenSecondsBackword(varNum > 0 ? varNum : 10);
-            dis.className = 'dis'
-            numInput.innerText = ''
-            a = []
+            if (varNum > 0) {
+                tenSecondsBackword(varNum);
+                dis.className = 'dis'
+                numInput.innerText = ''
+                a = []
+            } else {
+                tenSecondsBackword(10);
+            }
             break;
         case "F":
             if (varNum > 0) {
@@ -256,10 +264,14 @@ window.onkeydown = (e) => {
         a.pop();
     } else if (num.includes(e.key)) {
         a.push(e.key)
-    } else if (a.length > 0) {
+    }
+    if (a.length > 0) {
         dis.className = 'dis show'
-        numInput.innerText = ' ' + a.toString().replace(/\,/g, '')
+        numInput.innerText = 'Magnitude: ' + a.toString().replace(/\,/g, '')
+        console.log('show')
     } else {
         dis.className = 'dis'
+        console.log('hide')
     }
+    console.log('ok')
 }
