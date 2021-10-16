@@ -11,10 +11,12 @@ const homeDir = os.homedir();
 let videoItemWindow;
 let videoHomeWindow;
 let AudioHomeWindow;
+let ImageHomeWindow;
 let SecretFolderWindow;
 let AudioItemWindow;
 let videoDirURL = "";
 let audioDirURL = "";
+let imgDirUrl = "";
 const { app, globalShortcut, ipcMain, Menu } = electron;
 const menu = new Menu();
 
@@ -76,7 +78,10 @@ const main = async () => {
         videoHomeWindow = await createWindow(
             "./src/FRONT/videoHome/videoHome.html"
         );
-        const videoNames = await getAllFileInSpecificDir(videoDirURL, ".mp4");
+        const videoNames = await getAllFileInSpecificDir(videoDirURL, [
+            ".mp4",
+            ".mkv",
+        ]);
         videoHomeWindow.once("ready-to-show", () => {
             videoHomeWindow.webContents.send("kunal", { videoNames });
         });
@@ -95,7 +100,10 @@ const main = async () => {
         //gets file from the given path and sends the video paths to videoHomeScreenMenu
         ipcMain.on("reloadVideoInSpecificDir", async (e, d) => {
             videoDirURL = d;
-            const videoNames = await getAllFileInSpecificDir(d, ".mp4");
+            const videoNames = await getAllFileInSpecificDir(d, [
+                ".mp4",
+                ".mkv",
+            ]);
             videoHomeWindow.webContents.send("kunal", { videoNames });
             videoHomeScreenMenu(
                 menu,
@@ -114,7 +122,7 @@ const main = async () => {
         AudioHomeWindow = await createWindow(
             "./src/FRONT/AudioHome/AudioHome.html"
         );
-        const audioNames = await getAllFileInSpecificDir(audioDirURL, ".mp3");
+        const audioNames = await getAllFileInSpecificDir(audioDirURL, [".mp3"]);
         AudioHomeWindow.once("ready-to-show", () => {
             AudioHomeWindow.webContents.send("audioURLS", { audioNames });
         });
@@ -122,16 +130,39 @@ const main = async () => {
         //gets file from the given path and sends the audio dir paths to audioHomeScreenMenu
         ipcMain.on("reloadAudioInSpecificDir", async (e, d) => {
             audioDirURL = d;
-            const AudioNames = await getAllFileInSpecificDir(d, ".mp3");
+            const AudioNames = await getAllFileInSpecificDir(d, [".mp3"]);
             AudioHomeWindow.webContents.send("AudioReloadData", { AudioNames });
         });
         //Reload the same folder
         ipcMain.on("reloadAudioHomeScreenRequestInSameDir", async () => {
-            const AudioNames = await getAllFileInSpecificDir(
-                audioDirURL,
-                ".mp3"
-            );
+            const AudioNames = await getAllFileInSpecificDir(audioDirURL, [
+                ".mp3",
+            ]);
             AudioHomeWindow.webContents.send("AudioReloadData", { AudioNames });
+        });
+    });
+
+    ipcMain.on("openImageWindow", async () => {
+        const imgType = [".png", ".jpg", ".jpeg", "webp"];
+        imgDirUrl = `${homeDir}/Pictures`;
+        ImageHomeWindow = await createWindow("./src/FRONT/Image/Image.html");
+        const ImagNames = await getAllFileInSpecificDir(imgDirUrl, imgType);
+        ImageHomeWindow.once("ready-to-show", () => {
+            ImageHomeWindow.webContents.send("imgURLS", { ImagNames });
+        });
+
+        ipcMain.on("reloadImageInSpecificDir", async (e, d) => {
+            imgDirUrl = d;
+            const ImageNames = await getAllFileInSpecificDir(d, imgType);
+            ImageHomeWindow.webContents.send("ImageReloadData", { ImageNames });
+        });
+
+        ipcMain.on("reloadImageHomeScreenRequestInSameDir", async () => {
+            const ImageNames = await getAllFileInSpecificDir(
+                imgDirUrl,
+                imgType
+            );
+            ImageHomeWindow.webContents.send("ImageReloadData", { ImageNames });
         });
     });
 
@@ -148,7 +179,9 @@ const main = async () => {
             false,
             JSON.stringify([])
         );
-        const VideoDataJson = fs.readFileSync(`${homeDir}/videoData.json`).toString();
+        const VideoDataJson = fs
+            .readFileSync(`${homeDir}/videoData.json`)
+            .toString();
         let VideoDataArray = JSON.parse(VideoDataJson);
         VideoDataArray = VideoDataArray.filter((e) => e.name == data.item.name);
 
@@ -232,7 +265,9 @@ const main = async () => {
         const key = getKey(password);
         const hidden = fs.readdirSync(`${homeDir}/hidden`);
         const jsonFiles = hidden.filter((e) => e.includes(name));
-        const json = fs.readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`).toString();
+        const json = fs
+            .readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`)
+            .toString();
         const { iv, data, type } = JSON.parse(json);
 
         let decipher = crypto.createDecipheriv(algorithm, key, iv);
@@ -250,7 +285,9 @@ const main = async () => {
         const key = getKey(password);
         const hidden = fs.readdirSync(`${homeDir}/hidden`);
         const jsonFiles = hidden.filter((e) => e.includes(name));
-        const json = fs.readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`).toString();
+        const json = fs
+            .readFileSync(`${homeDir}/hidden/${jsonFiles[0]}`)
+            .toString();
         const { iv, data, type, path } = JSON.parse(json);
 
         let decipher = crypto.createDecipheriv(algorithm, key, iv);
@@ -269,14 +306,19 @@ const main = async () => {
                 false,
                 JSON.stringify([])
             );
-            const dataJson = fs.readFileSync(`${homeDir}/videoData.json`).toString();
+            const dataJson = fs
+                .readFileSync(`${homeDir}/videoData.json`)
+                .toString();
             let data = JSON.parse(dataJson);
             data = data.filter((e) => e.name !== name);
             const VideoData = [
                 ...data,
                 { currentTime, volume, name, videoPlayBackSpeed },
             ];
-            fs.writeFileSync(`${homeDir}/videoData.json`, JSON.stringify(VideoData));
+            fs.writeFileSync(
+                `${homeDir}/videoData.json`,
+                JSON.stringify(VideoData)
+            );
         }
     );
 };
@@ -293,7 +335,10 @@ function createFolderOrFileIfNotExists(
         if (isDir) {
             fs.mkdirSync(`${pathToSearch}/${fileOrFolderName}`);
         } else {
-            fs.writeFileSync(`${pathToSearch}/${fileOrFolderName}`, defaultData);
+            fs.writeFileSync(
+                `${pathToSearch}/${fileOrFolderName}`,
+                defaultData
+            );
         }
     }
 }

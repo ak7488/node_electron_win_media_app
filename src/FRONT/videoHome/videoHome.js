@@ -1,109 +1,49 @@
 const { ipcRenderer, remote } = require("electron");
-const React = require("react");
-const ReactDom = require("react-dom");
 
-let VideoNames = [];
+let VideoNames = [],
+    videoNamesShort = [],
+    pageNum = 1;
+const pageNumIndicator = document.getElementById("page_num");
 
 const onVideoItemClickHandler = (item) => {
     if (!item.path || !item.name) return;
     ipcRenderer.send("videos", { VideoNames, item });
 };
 
-const VideoItem = ({ item, index }) => {
-    return /*#__PURE__*/ React.createElement(
-        "div",
-        {
-            className: "videoItem",
-            onClick: () => onVideoItemClickHandler(item),
-        },
-        /*#__PURE__*/ React.createElement(
-            "h3",
-            {
-                className: "videoItem__h3__name",
-            },
-            `${index + 1}). ${item.name}`
-        ),
-        /*#__PURE__*/ React.createElement(
-            "p",
-            {
-                className: "videoItem__p__path",
-            },
-            item.path
-        )
-    );
-};
+const videoItemRenderer = async () => {
+    const VideoElementContainer = document.createElement("div");
+    videoNamesShort.map((e, index) => {
+        const videoItem = document.createElement("div");
+        const video = document.createElement("video");
+        const name = document.createElement("p");
 
-const VideoElement = () => {
-    return /*#__PURE__*/ React.createElement(
-        "div",
-        {
-            className: "VideoElement",
-        },
-        VideoNames.lenght === 0
-            ? /*#__PURE__*/ React.createElement(
-                "div",
-                {
-                    className: "VideoElement__no_video_yet__container",
-                },
-                  /*#__PURE__*/ React.createElement(
-                    "p",
-                    {
-                        className: "VideoElement__no_video_yet__p",
-                    },
-                    "No Video Yet!"
-                )
-            )
-            : /*#__PURE__*/ React.createElement(
-                "div",
-                {
-                    className: "VideoElement__videoItem__container",
-                },
-                VideoNames.map((e, index) =>
-                      /*#__PURE__*/ React.createElement(VideoItem, {
-                    key: index,
-                    item: e,
-                    index: index,
-                })
-                )
-            )
-    );
-};
+        video.preload = false;
+        video.src = e.path;
+        video.classList = "videoItem_video";
+        name.innerText = `${index + 1}). ${e.name}`;
+        name.classList = "videoItem_name_p";
 
-const addVideo = () => {
-    ReactDom.render(VideoElement(), document.getElementById("root"));
+        videoItem.appendChild(video);
+        videoItem.appendChild(name);
+        videoItem.classList = "videoItem";
+        videoItem.onclick = () => {
+            onVideoItemClickHandler(e);
+        };
+
+        VideoElementContainer.appendChild(videoItem);
+        VideoElementContainer.classList = "videoElementContainer";
+    });
+    document.getElementById("root").innerHTML = "";
+    document.getElementById("root").appendChild(VideoElementContainer);
 };
 
 ipcRenderer.on("kunal", (e, { videoNames }) => {
     VideoNames = videoNames;
-    addVideo();
+    videoNamesShort = videoNames.slice(0, 20);
+    videoItemRenderer();
+    const maxPage = Math.ceil(VideoNames.length / 20);
+    pageNumIndicator.innerText = `Page ${pageNum}/${maxPage}`;
 });
-
-// let isFormShow = false;
-
-// ipcRenderer.on("toggleV", () => {
-//     const form = document.getElementById("form");
-//     const input = document.getElementById("input");
-//     const root = document.getElementById("root");
-
-//     root.scrollTo(0, 0);
-
-//     if (isFormShow) {
-//         form.className = "form_show";
-//         isFormShow = !isFormShow;
-//         input.focus();
-//         form.addEventListener("submit", (e) => {
-//             e.preventDefault();
-//             const number = input.value;
-//             if (!number || number > VideoNames.length || number < 0)
-//                 return (number = 0);
-//             onVideoItemClickHandler(VideoNames[number - 1]);
-//         });
-//     } else {
-//         form.className = "";
-//         isFormShow = !isFormShow;
-//         root.focus();
-//     }
-// });
 
 ipcRenderer.on("requestFileDir", async () => {
     const dialog = remote.dialog;
@@ -148,26 +88,61 @@ document.onkeypress = (e) => {
 };
 
 //video open by number
-let a = []
-const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"]
-const dis = document.getElementById('dis')
-const numInput = document.getElementById('numInput')
+let a = [];
+const num = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+const dis = document.getElementById("dis");
+const numInput = document.getElementById("numInput");
 
 window.onkeydown = (e) => {
-    const b = parseInt(a.toString().replace(/\,/g, ''))
-    if (e.key === 'Backspace' && a.length > 0) {
+    const b = parseInt(a.toString().replace(/\,/g, ""));
+    if (e.key === "Backspace" && a.length > 0) {
         a.pop();
     } else if (num.includes(e.key)) {
-        a.push(e.key)
-    } else if (e.key === 'Enter' && b < VideoNames.length && b > 0) {
-        onVideoItemClickHandler(VideoNames[b - 1]);
-        dis.className = 'dis'
-        numInput.innerText = ''
+        a.push(e.key);
+    } else if (e.key === "Enter" && b < videoNamesShort.length && b > 0) {
+        onVideoItemClickHandler(videoNamesShort[b - 1]);
+        dis.className = "dis";
+        numInput.innerText = "";
     }
     if (a.length > 0) {
-        dis.className = 'dis show'
-        numInput.innerText = 'Video num: ' + a.toString().replace(/\,/g, '')
+        dis.className = "dis show";
+        numInput.innerText = "Video num: " + a.toString().replace(/\,/g, "");
     } else {
-        dis.className = 'dis'
+        dis.className = "dis";
     }
-}
+};
+
+//pageControl
+
+const nextPage = () => {
+    const maxPage = Math.ceil(VideoNames.length / 20);
+    if (pageNum >= maxPage) return;
+    pageNum += 1;
+    pageNumIndicator.innerText = `Page ${pageNum}/${maxPage}`;
+    videoNamesShort = VideoNames.slice((pageNum - 1) * 20, pageNum * 20);
+    videoItemRenderer();
+};
+
+const previousPage = () => {
+    const maxPage = Math.ceil(VideoNames.length / 20);
+    if (pageNum <= 0) return;
+    pageNum -= 1;
+    pageNumIndicator.innerText = `Page ${pageNum}/${maxPage}`;
+    videoNamesShort = VideoNames.slice((pageNum - 1) * 20, pageNum * 20);
+    videoItemRenderer();
+};
+
+window.onkeydown = (e) => {
+    switch (e.key) {
+        case "ArrowRight":
+            nextPage();
+            break;
+        case "ArrowLeft":
+            previousPage();
+            break;
+    }
+};
+
+document.getElementById("next").onclick = nextPage;
+
+document.getElementById("previous").onclick = previousPage;

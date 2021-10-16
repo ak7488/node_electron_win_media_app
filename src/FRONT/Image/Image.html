@@ -4,13 +4,14 @@
         <meta charset="UTF-8" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <link rel="stylesheet" href="./videoHome.css" />
-        <title>Videos</title>
+        <title>Image</title>
+        <link rel="stylesheet" href="./Image.css" />
+        <script src="./Image.js" defer></script>
     </head>
     <body>
         <div id="WindowControls" class="WindowControls">
             <div id="WinControlsMenu" class="WinControlsMenu">
-                <h3 id="WinTitle" class="WinTitle">Videos</h3>
+                <h3 id="WinTitle" class="WinTitle">Image</h3>
             </div>
             <div id="ThreeMainButtons" class="ThreeMainButtons">
                 <div id="minimise" class="minimise">
@@ -31,10 +32,19 @@
             <p class="page_no_indeicator" id="page_num"></p>
             <button id="next">Next</button>
         </div>
-        <div id="dis" class="dis">
-            <div class="numInput" id="numInput"></div>
+        <div class="img_show hide" id="img_show">
+            <div class="img_show_tolls_container">
+                <p id="img_show_path"></p>
+                <button id="rotate_90">Rotate 90 deg</button>
+                <button id="img_show_close_button" class="btn_danger">
+                    Close
+                </button>
+                <button class="btn_danger" id="delete_img">Delete</button>
+                <button id="previousImgButton">Previous</button>
+                <button id="nextImgButton">Next</button>
+            </div>
+            <img class="img_full_element" id="img_full_element" />
         </div>
         <div id="root"></div>
-        <script src="./videoHome.js"></script>
     </body>
 </html>

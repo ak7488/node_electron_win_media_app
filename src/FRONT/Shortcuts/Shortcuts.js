@@ -7,6 +7,7 @@ const table_video_home = document.getElementById("table_video_home");
 const table_video_item = document.getElementById("table_video_item");
 const table_audio_home = document.getElementById("table_audio_home");
 const table_audio_item = document.getElementById("table_audio_item");
+const table_image_item = document.getElementById("table_image_item");
 
 const createTable = (table, array = []) => {
     array.forEach((e) => {
@@ -44,7 +45,9 @@ const shortCutArrayVideoHome = [
     ["f2", "Open video in specific file"],
     ["f4", "Sort video (name/time)"],
     ["Shift + R", "Reload video list"],
-    ["1,2,3,4,5,6,7,8,9,0", "select and open video by index"]
+    ["1,2,3,4,5,6,7,8,9,0", "select and open video by index"],
+    ["ArrowLeft", "Previous page"],
+    ["ArrowRight", "Next page"],
 ];
 
 const shortCutArrayVideoItem = [
@@ -59,7 +62,10 @@ const shortCutArrayVideoItem = [
     ["o", "save video data to open it again with same configration"],
     ["Shift + F", "Increase play back speed"],
     ["Shift + B", "Decrease play back speed"],
-    ["1,2,3,4,5,6,7,8,9,0", "Mangnitude by which to increase or deccrease ([3 + Shift + F] to increase playback speed by 3)"]
+    [
+        "1,2,3,4,5,6,7,8,9,0",
+        "Mangnitude by which to increase or deccrease ([3 + Shift + F] to increase playback speed by 3)",
+    ],
 ];
 
 const shortCutArrayAudioHome = [
@@ -86,6 +92,17 @@ const shortCutArrayAudioItem = [
     ["q", "Close audio player"],
 ];
 
+const shortCutArrayImageItem = [
+    ["n", "Next image"],
+    ["p", "Previous image"],
+    ["Arrow Left", "Previous page"],
+    ["Arrow Right", "Next page"],
+    ["Shift + D", "Delete image"],
+    ["Shift + C", "close full image"],
+    ["Shift + J", "open dev tools"],
+    ["r", "rotate image by 90 deg"],
+];
+
 createTable(tabel_global, shortCutArrayGlobal);
 createTable(table_common, shortCutArrayCommon);
 createTable(table_home, shortCutArrayHome);
@@ -93,6 +110,7 @@ createTable(table_video_home, shortCutArrayVideoHome);
 createTable(table_video_item, shortCutArrayVideoItem);
 createTable(table_audio_home, shortCutArrayAudioHome);
 createTable(table_audio_item, shortCutArrayAudioItem);
+createTable(table_image_item, shortCutArrayImageItem);
 
 //Windows three main controls
 const minimise = document.getElementById("minimise");

@@ -32,7 +32,7 @@ function videoHomeScreenMenu(
                     click: async () => {
                         const videoNames = await getAllFileInSpecificDir(
                             dirURL,
-                            ".mp4"
+                            ['.mp4', '.mkv']
                         );
                         if (isSortByTime) {
                             win.webContents.send("kunal", { videoNames });
@@ -52,7 +52,7 @@ function videoHomeScreenMenu(
                         win.reload();
                         const videoNames = await getAllFileInSpecificDir(
                             `${homeDir}/Videos`,
-                            ".mp4"
+                            ['.mp4', '.mkv']
                         );
                         setTimeout(() => {
                             win.webContents.send("kunal", { videoNames });

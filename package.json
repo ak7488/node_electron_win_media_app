@@ -1,14 +1,12 @@
 {
     "name": "media-player",
     "productName": "Media player",
-    "version": "2.3.3",
+    "version": "3.0.0",
     "description": "A Media app for desktop width hidden and safe folder",
     "main": "main.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1",
         "start": "electron main.js",
-        "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=src/assets/video.icns --prune=true --out=release-builds",
-        "package-win": "electron-packager . video-app --overwrite --asar --platform=win32 --arch=ia32 --icon=src/assets/1video.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Video\""
+        "build": "electron-packager . video-app --overwrite --asar --platform=win32 --arch=ia32 --icon=src/assets/1video.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Video\""
     },
     "author": "Anubhav_Anand",
     "license": "ISC",
