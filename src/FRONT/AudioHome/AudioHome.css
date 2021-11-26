@@ -1,253 +1,255 @@
 :root {
-    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-        "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-        "Helvetica Neue", sans-serif;
-    --colour_one: #e63946;
-    --colour_two: #f1faee;
-    --colour_three: #a8dadc;
-    --colour_four: #457b9d;
-    --colour_five: #1d3557;
-    --colour_six: #112035;
-    --colour_seven: #e63946;
-    --colour_eight: rgb(233, 233, 233);
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  --colour_one: #e63946;
+  --colour_two: #f1faee;
+  --colour_three: #a8dadc;
+  --colour_four: #457b9d;
+  --colour_five: #1d3557;
+  --colour_six: #112035;
+  --colour_seven: #e63946;
+  --colour_eight: rgb(233, 233, 233);
 }
 
 * {
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-    font-family: var(--font-family);
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: var(--font-family);
 }
 
 body {
-    background-color: var(--colour_six);
+  background-color: var(--colour_six);
 }
 
 #root {
-    width: 100vw;
-    word-break: break-all;
-    padding: 20px;
+  width: 100vw;
+  word-break: break-all;
+  padding: 20px;
 }
 
 .AudioElement {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .AudioElement::-webkit-scrollbar-button {
-    color: blue;
+  color: blue;
 }
 
 ::-webkit-scrollbar {
-    background-color: var(--colour_three);
-    width: 5px;
+  background-color: var(--colour_three);
+  width: 5px;
 }
 
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
-    background: var(--colour_five);
-    border-radius: 2px;
+  background: var(--colour_five);
+  border-radius: 2px;
 }
 
 .AudioElement__no_video_yet__container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .AudioElement__AudioItem__container {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .AudioItem {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
-    min-height: 40px;
-    background-color: var(--colour_one);
-    cursor: pointer;
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  min-height: 40px;
+  background-color: var(--colour_one);
+  cursor: pointer;
 }
 
 .AudioItem__h3__name {
-    color: var(--colour_six);
+  color: var(--colour_six);
 }
 
 .AudioItem__p__path {
-    color: var(--colour_five);
+  color: var(--colour_five);
 }
 
 .AudioContainer__show {
-    display: block;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background-color: #1120359d;
-    z-index: 100;
+  display: block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #1120359d;
+  z-index: 100;
 }
 
 .AudioContainer__hide {
-    display: none;
+  display: none;
 }
 
 /* Player styles */
 #Controls_container {
-    display: flex;
-    flex-direction: column;
-    background-color: #e7e7e7;
-    padding: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #e7e7e7;
+  padding: 20px;
 }
 #buttons__container {
-    display: flex;
-    width: 590px;
+  display: flex;
+  width: 590px;
 }
 
 .btn {
-    padding: 10px;
-    width: 20%;
-    background-color: #631a86;
-    border: none;
-    outline: none;
-    margin: 10px;
-    color: white;
-    font-weight: bold;
-    font-size: 16px;
+  padding: 10px;
+  width: 20%;
+  background-color: #631a86;
+  border: none;
+  outline: none;
+  margin: 10px;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
 }
 
 abbr,
 ins {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .btn:hover {
-    background-color: #4e106b;
+  background-color: #4e106b;
 }
 
 .btn_cancel {
-    background-color: red;
+  background-color: red;
 }
 .btn_cancel:hover {
-    background-color: rgb(223, 0, 0);
+  background-color: rgb(223, 0, 0);
 }
 
 @media screen and (-webkit-min-device-pixel-ratio: 0) {
-    input[type="range"] {
-        overflow: hidden;
-        -webkit-appearance: none;
-        background-color: #631a86;
-    }
+  input[type="range"] {
+    overflow: hidden;
+    -webkit-appearance: none;
+    background-color: #631a86;
+  }
 
-    input[type="range"]::-webkit-slider-runnable-track {
-        height: 10px;
-        -webkit-appearance: none;
-        color: #2d7dd2;
-        margin-top: -1px;
-    }
+  input[type="range"]::-webkit-slider-runnable-track {
+    height: 10px;
+    -webkit-appearance: none;
+    color: #2d7dd2;
+    margin-top: -1px;
+  }
 
-    input[type="range"]::-webkit-slider-thumb {
-        width: 10px;
-        -webkit-appearance: none;
-        height: 10px;
-        cursor: ew-resize;
-        background: #00c49a;
-        box-shadow: -500px 0 0 500px #631a86;
-    }
+  input[type="range"]::-webkit-slider-thumb {
+    width: 10px;
+    -webkit-appearance: none;
+    height: 10px;
+    cursor: ew-resize;
+    background: #00c49a;
+    box-shadow: -500px 0 0 500px #631a86;
+  }
 }
 
 #name,
 #info_p,
 #range {
-    margin: 5px 10px;
+  margin: 5px 10px;
 }
 
 /* WinControls */
 
 .WindowControls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background-color: rgb(32, 23, 47);
-    width: 100vw;
-    height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgb(32, 23, 47);
+  width: 100vw;
+  height: 40px;
+  -webkit-app-region: drag;
 }
 
 .ThreeMainButtons {
-    display: flex;
+  display: flex;
+  -webkit-app-region: no-drag;
 }
 
 .minimise_sign {
-    width: 20px;
-    background-color: whitesmoke;
-    height: 3px;
+  width: 20px;
+  background-color: whitesmoke;
+  height: 3px;
 }
 
 .close {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    transition: background 0.3s ease-in-out;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: background 0.3s ease-in-out;
 }
 
 .close:hover {
-    background-color: red;
+  background-color: red;
 }
 
 .maximise,
 .minimise {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s ease-in-out;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease-in-out;
 }
 
 .minimise:hover,
 .maximise:hover {
-    background-color: black;
+  background-color: black;
 }
 
 .maximise_sign {
-    width: 20px;
-    height: 20px;
-    border: 3px solid whitesmoke;
+  width: 20px;
+  height: 20px;
+  border: 3px solid whitesmoke;
 }
 
 .close_sign_one {
-    transform: rotate(45deg);
-    width: 28px;
-    background-color: whitesmoke;
-    height: 3px;
-    position: absolute;
-    left: 7px;
+  transform: rotate(45deg);
+  width: 28px;
+  background-color: whitesmoke;
+  height: 3px;
+  position: absolute;
+  left: 7px;
 }
 .close_sign_two {
-    transform: rotate(-45deg);
-    width: 28px;
-    background-color: whitesmoke;
-    height: 3px;
-    position: absolute;
-    left: 7px;
+  transform: rotate(-45deg);
+  width: 28px;
+  background-color: whitesmoke;
+  height: 3px;
+  position: absolute;
+  left: 7px;
 }
 
 .WinControlsMenu {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .WinTitle {
-    padding: 0px 10px;
-    color: whitesmoke;
+  padding: 0px 10px;
+  color: whitesmoke;
 }
