@@ -267,3 +267,14 @@ button:hover {
   padding: 10px;
   color: var(--colour_two);
 }
+
+.no_image_item_warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 15px;
+}

@@ -2,11 +2,11 @@ const { ipcRenderer, remote } = require("electron");
 const fs = require("fs");
 
 let imgData = [],
-    imgDataSliced = [],
-    pageNum = 1,
-    rotate = 0,
-    focusedImgPath = "",
-    imgIndex = 0;
+  imgDataSliced = [],
+  pageNum = 1,
+  rotate = 0,
+  focusedImgPath = "",
+  imgIndex = 0;
 const pageNumIndicator = document.getElementById("page_num");
 const img_show = document.getElementById("img_show");
 const img_full_element = document.getElementById("img_full_element");
@@ -18,9 +18,9 @@ const previousImgButton = document.getElementById("previousImgButton");
 const nextImgButton = document.getElementById("nextImgButton");
 
 ipcRenderer.on("imgURLS", (_, data) => {
-    imgData = data.ImagNames;
-    imgDataSliced = imgData.slice(0, 50);
-    renderImgItem();
+  imgData = data.ImagNames;
+  imgDataSliced = imgData.slice(0, 50);
+  renderImgItem();
 });
 
 // main
@@ -29,79 +29,92 @@ ipcRenderer.on("imgURLS", (_, data) => {
 const root = document.getElementById("root");
 
 const renderImgItem = () => {
-    root.innerHTML = "";
+  root.innerHTML = "";
+  if (imgDataSliced.length === 0) {
+    const noImageWarning = document.createElement("p");
+    noImageWarning.classList.add("no_image_item_warning");
+    noImageWarning.innerText = `No image found.`;
+    root.appendChild(noImageWarning);
+  } else {
     imgDataSliced.forEach((e, index) => {
-        const img = document.createElement("img");
-        const name = document.createElement("p");
-        const imgItem = document.createElement("div");
-        const imgBack = document.createElement("div");
+      const img = document.createElement("img");
+      const name = document.createElement("p");
+      const imgItem = document.createElement("div");
+      const imgBack = document.createElement("div");
 
-        img.src = e.path;
-        img.classList = "img_element";
-        name.innerText = e.name;
-        name.classList = "name_p_element";
+      img.src = e.path;
+      img.classList = "img_element";
+      name.innerText = e.name;
+      name.classList = "name_p_element";
 
-        imgBack.classList = "imgBack";
-        imgBack.appendChild(img);
+      imgBack.classList = "imgBack";
+      imgBack.appendChild(img);
 
-        imgItem.appendChild(imgBack);
-        imgItem.appendChild(name);
-        imgItem.classList = "imgItem";
-        imgItem.onclick = () => {
-            img_full_element.style = `transform: rotate(0deg)`;
-            img_full_element.src = e.path;
-            focusedImgPath = e.path;
-            img_show_path.innerText = e.path;
-            img_show.classList = "img_show";
-            imgIndex = index;
-        };
+      imgItem.appendChild(imgBack);
+      imgItem.appendChild(name);
+      imgItem.classList = "imgItem";
+      imgItem.onclick = () => {
+        img_full_element.style = `transform: rotate(0deg)`;
+        img_full_element.src = e.path;
+        focusedImgPath = e.path;
+        img_show_path.innerText = e.path;
+        img_show.classList = "img_show";
+        imgIndex = index;
+      };
 
-        root.appendChild(imgItem);
+      root.appendChild(imgItem);
     });
-    const maxPage = Math.ceil(imgData.length / 50);
-    pageNumIndicator.innerText = `Page ${pageNum}/${maxPage}`;
+  }
+  const maxPage = Math.ceil(imgData.length / 50);
+  pageNumIndicator.innerText = `Page ${pageNum}/${maxPage}`;
 };
 
+ipcRenderer.on("ImageReloadData", (_, { ImageNames }) => {
+  imgData = ImageNames ? ImageNames : [];
+  imgDataSliced = imgData.slice(0, 50);
+  renderImgItem();
+});
+
 const deleteImgHandler = () => {
-    if (confirm(`WARNING: Do you want to delete ${focusedImgPath}?`)) {
-        imgData = imgData.filter((e) => e.path !== focusedImgPath);
-        imgDataSliced = imgDataSliced.filter((e) => e.path !== focusedImgPath);
-        fs.unlinkSync(focusedImgPath);
-        alert(`${focusedImgPath} has been removed from your computer.`);
-        renderImgItem();
-    }
+  if (confirm(`WARNING: Do you want to delete ${focusedImgPath}?`)) {
+    imgData = imgData.filter((e) => e.path !== focusedImgPath);
+    imgDataSliced = imgDataSliced.filter((e) => e.path !== focusedImgPath);
+    fs.unlinkSync(focusedImgPath);
+    alert(`${focusedImgPath} has been removed from your computer.`);
+    renderImgItem();
+  }
 };
 
 const rotate90degHandler = () => {
-    rotate += 90;
-    img_full_element.style = `transform: rotate(${rotate}deg)`;
+  rotate += 90;
+  img_full_element.style = `transform: rotate(${rotate}deg)`;
 };
 
 const closeImgFullHandler = () => {
-    rotate = 0;
-    img_show.classList = "img_show hide";
+  rotate = 0;
+  img_show.classList = "img_show hide";
 };
 
 const nextImg = () => {
-    if (imgIndex >= imgDataSliced.length) return;
-    imgIndex += 1;
-    const imgPath = imgDataSliced[imgIndex].path;
-    img_full_element.style = `transform: rotate(0deg)`;
-    img_full_element.src = imgPath;
-    focusedImgPath = imgPath;
-    img_show_path.innerText = imgPath;
-    img_show.classList = "img_show";
+  if (imgIndex >= imgDataSliced.length) return;
+  imgIndex += 1;
+  const imgPath = imgDataSliced[imgIndex].path;
+  img_full_element.style = `transform: rotate(0deg)`;
+  img_full_element.src = imgPath;
+  focusedImgPath = imgPath;
+  img_show_path.innerText = imgPath;
+  img_show.classList = "img_show";
 };
 
 const previousImg = () => {
-    if (imgIndex <= 0) return;
-    imgIndex -= 1;
-    const imgPath = imgDataSliced[imgIndex].path;
-    img_full_element.style = `transform: rotate(0deg)`;
-    img_full_element.src = imgPath;
-    focusedImgPath = imgPath;
-    img_show_path.innerText = imgPath;
-    img_show.classList = "img_show";
+  if (imgIndex <= 0) return;
+  imgIndex -= 1;
+  const imgPath = imgDataSliced[imgIndex].path;
+  img_full_element.style = `transform: rotate(0deg)`;
+  img_full_element.src = imgPath;
+  focusedImgPath = imgPath;
+  img_show_path.innerText = imgPath;
+  img_show.classList = "img_show";
 };
 
 nextImgButton.onclick = nextImg;
@@ -117,81 +130,93 @@ const maximise = document.getElementById("maximise");
 const close = document.getElementById("close");
 
 const minimiseHandler = () => {
-    remote.getCurrentWindow().minimize();
+  remote.getCurrentWindow().minimize();
 };
 const maximiseHandler = () => {
-    remote.getCurrentWindow().maximize();
+  remote.getCurrentWindow().maximize();
 };
 const closeWindowHandler = () => {
-    remote.getCurrentWindow().close();
+  remote.getCurrentWindow().close();
 };
 
 minimise.onclick = minimiseHandler;
 maximise.onclick = maximiseHandler;
 close.onclick = closeWindowHandler;
 
-document.onkeydown = (e) => {
-    switch (e.key) {
-        case "m":
-            minimiseHandler();
-            break;
-        case "a":
-            maximiseHandler();
-            break;
-        case "c":
-            closeWindowHandler();
-            break;
-        case "J":
-            remote.getCurrentWebContents().toggleDevTools();
-            break;
-        case "r":
-            rotate90degHandler();
-            break;
-        case "C":
-            closeImgFullHandler();
-            break;
-        case "D":
-            deleteImgHandler();
-            break;
-        case "n":
-            nextImg();
-            break;
-        case "p":
-            previousImg();
-            break;
-    }
+document.onkeyup = (e) => {
+  switch (e.key) {
+    case "m":
+      minimiseHandler();
+      break;
+    case "a":
+      maximiseHandler();
+      break;
+    case "c":
+      closeWindowHandler();
+      break;
+    case "J":
+      remote.getCurrentWebContents().toggleDevTools();
+      break;
+    case "r":
+      rotate90degHandler();
+      break;
+    case "C":
+      closeImgFullHandler();
+      break;
+    case "D":
+      deleteImgHandler();
+      break;
+    case "n":
+      nextImg();
+      break;
+    case "p":
+      previousImg();
+      break;
+    case "F2":
+      openDialog();
+      break;
+  }
 };
+
+async function openDialog() {
+  const dialog = remote.dialog;
+
+  var path = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+  });
+  ipcRenderer.send("reloadImageInSpecificDir", path.filePaths[0]);
+}
 
 //pageControl
 
 function nextPage() {
-    const maxPage = Math.ceil(imgData.length / 50);
-    if (pageNum >= maxPage) return;
-    pageNum += 1;
-    imgDataSliced = imgData.slice((pageNum - 1) * 50, pageNum * 50);
-    renderImgItem();
-    closeImgFullHandler();
-    imgIndex = 0;
+  const maxPage = Math.ceil(imgData.length / 50);
+  if (pageNum >= maxPage) return;
+  pageNum += 1;
+  imgDataSliced = imgData.slice((pageNum - 1) * 50, pageNum * 50);
+  renderImgItem();
+  closeImgFullHandler();
+  imgIndex = 0;
 }
 
 function previousPage() {
-    if (pageNum <= 0) return;
-    pageNum -= 1;
-    imgDataSliced = imgData.slice((pageNum - 1) * 50, pageNum * 50);
-    renderImgItem();
-    closeImgFullHandler();
-    imgIndex = 0;
+  if (pageNum <= 0) return;
+  pageNum -= 1;
+  imgDataSliced = imgData.slice((pageNum - 1) * 50, pageNum * 50);
+  renderImgItem();
+  closeImgFullHandler();
+  imgIndex = 0;
 }
 
 window.onkeydown = (e) => {
-    switch (e.key) {
-        case "ArrowRight":
-            nextPage();
-            break;
-        case "ArrowLeft":
-            previousPage();
-            break;
-    }
+  switch (e.key) {
+    case "ArrowRight":
+      nextPage();
+      break;
+    case "ArrowLeft":
+      previousPage();
+      break;
+  }
 };
 
 document.getElementById("next").onclick = nextPage;

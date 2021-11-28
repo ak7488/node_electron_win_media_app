@@ -17,6 +17,7 @@
   margin: 0;
   box-sizing: border-box;
   font-family: var(--font-family);
+  overflow-x: hidden;
 }
 
 body {
@@ -36,51 +37,24 @@ body {
   align-items: center;
 }
 
-.AudioElement::-webkit-scrollbar-button {
-  color: blue;
+::-webkit-scrollbar {
+  background-color: transparent;
+  width: 10px;
 }
 
-::-webkit-scrollbar {
-  background-color: var(--colour_three);
-  width: 5px;
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+::-webkit-scrollbar-track-piece:start {
+  background: rgba(0, 0, 0, 0.1);
+  margin-top: 40px;
 }
 
 ::-webkit-scrollbar-thumb:window-inactive,
 ::-webkit-scrollbar-thumb {
-  background: var(--colour_five);
-  border-radius: 2px;
-}
-
-.AudioElement__no_video_yet__container {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.AudioElement__AudioItem__container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.AudioItem {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  min-height: 40px;
-  background-color: var(--colour_one);
-  cursor: pointer;
-}
-
-.AudioItem__h3__name {
-  color: var(--colour_six);
-}
-
-.AudioItem__p__path {
-  color: var(--colour_five);
+  background: blue;
+  border-radius: 10px;
 }
 
 .AudioContainer__show {
@@ -179,6 +153,16 @@ ins {
   width: 100vw;
   height: 40px;
   -webkit-app-region: drag;
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.WindoesControls_space {
+  width: 100%;
+  height: 50px;
 }
 
 .ThreeMainButtons {
@@ -252,4 +236,46 @@ ins {
 .WinTitle {
   padding: 0px 10px;
   color: whitesmoke;
+}
+
+.no_audio_item_warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 15px;
+}
+
+/* item */
+
+#root {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-items: center;
+  row-gap: 15px;
+}
+
+.audioItem {
+  width: 90%;
+  padding: 15px;
+  color: whitesmoke;
+  background-color: var(--colour_one);
+  border-radius: 10px;
+  margin-top: 10px;
+  height: 100%;
+}
+
+@media (min-width: 600px) {
+  #root {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (min-width: 1000px) {
+  #root {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
 }

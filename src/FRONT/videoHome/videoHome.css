@@ -232,6 +232,7 @@ form {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
   display: none;
+  z-index: 10;
 }
 
 .show {
@@ -247,4 +248,15 @@ form {
   color: black;
   min-width: 10px;
   min-height: 10px;
+}
+
+.no_video_item_warning {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: whitesmoke;
+  font-weight: bold;
+  font-size: 24px;
+  padding: 15px;
 }
